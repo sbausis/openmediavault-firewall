@@ -1,0 +1,13 @@
+Source: openmediavault-firewall
+Section: net
+XB-Plugin-Section: network
+Priority: optional
+Maintainer: Simon Baur <sbausis@gmx.net>
+Build-Depends: debhelper (>= 9.0.0 )
+Standards-Version: 3.9.6
+Homepage: http://UniverseNAS.0rca.ch/
+
+Package: openmediavault-firewall
+Architecture: all
+Depends: ${misc:Depends}, openmediavault (>= 2.1)
+Description: OpenMediaVault Firewall

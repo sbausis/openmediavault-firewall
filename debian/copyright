@@ -1,0 +1,5 @@
+Format: http://dep.debian.net/deps/dep5
+Upstream-Contact: Simon Baur <sbausis@gmx.net>
+Source: https://github.com/sbausis/openmediavault-firewall
+Copyright: 2015 Simon Baur <sbausis@gmx.net>
+License: GPL-3
