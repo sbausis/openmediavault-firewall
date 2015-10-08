@@ -102,11 +102,16 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
         if(is_null($oldObject))
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
 
+		$pub = explode(" ", $params['public-if']);
+		$priv = explode(" ", $params['private-if']);
+		
         // Update the configuration object.
         $object = array(
             "enable" 	=> array_boolval($params, 'enable'),
-			"public-if" => $params['public-if'],
-			"private-if" => $params['private-if']
+			"public-if" => $pub[0],
+			"public-addr" => $pub[1],
+			"private-if" => $priv[0],
+			"private-addr" => $priv[1]
         );
 
         if(FALSE === $xmlConfig->replace("//services/firewall", $object))
@@ -138,7 +143,7 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
             if (! ($i['netmask'] && $i['address']))
                 continue;
 
-            $netid = "{$i['devicename']} " . long2ip(ip2long($i['address']) & ip2long($i['netmask'])) . " {$i['netmask']}";
+            $netid = "{$i['devicename']} " . long2ip(ip2long($i['address']) & ip2long($i['netmask'])) . "/{$i['netmask']}";
             $nets[$netid] = $netid;
         }
 
