@@ -90,7 +90,9 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
         $this->validateMethodParams($params, '{
             "type"       : "object",
             "properties" : {
-                "enable"             : { "type" : "boolean" }
+                "enable"             : { "type" : "boolean" },
+	            "public-if"          : { "type" : "string" },
+	            "private-if"         : { "type" : "string" }
             }
         }');
 
@@ -103,8 +105,8 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
         // Update the configuration object.
         $object = array(
             "enable" 	=> array_boolval($params, 'enable'),
-			// readd OldStuff
-            //"entries" 	=> isset($oldObject['entries']) ? $oldObject['entries'] : array()
+			"public-if" => $params['public-if'],
+			"private-if" => $params['private-if']
         );
 
         if(FALSE === $xmlConfig->replace("//services/firewall", $object))
@@ -136,7 +138,7 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
             if (! ($i['netmask'] && $i['address']))
                 continue;
 
-            $netid = "{$i['devicename']} " . long2ip(ip2long($i['address']) & ip2long($i['netmask'])) . " / {$i['netmask']}";
+            $netid = "{$i['devicename']} " . long2ip(ip2long($i['address']) & ip2long($i['netmask'])) . " {$i['netmask']}";
             $nets[$netid] = $netid;
         }
 
