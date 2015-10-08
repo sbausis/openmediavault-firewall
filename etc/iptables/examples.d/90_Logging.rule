@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "#   LOGGING   #"
+
+iptables -N LOGGING
+iptables -A INPUT -j LOGGING
+iptables -A LOGGING -m limit --limit 200/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
+#iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables Packet Dropped: " --log-level 7
+iptables -A LOGGING -j DROP
+
+exit 0

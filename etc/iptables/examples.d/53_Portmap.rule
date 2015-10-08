@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "#   PORTMAP   #"
+
+#iptables -A INPUT -i $IF_PRIVATE -p udp --sport 111 --dport 1024:65535 -j ACCEPT
+
+exit 0

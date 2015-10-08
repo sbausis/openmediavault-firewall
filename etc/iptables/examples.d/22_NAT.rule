@@ -1,0 +1,27 @@
+#!/bin/bash
+
+echo "#     NAT     #"
+
+# Enable SNAT functionality for static IP
+#iptables -A POSTROUTING -t nat -s 192.168.0.0/24 -o $IF_PUBLIC -j SNAT --to-source x.y.z.c
+# or do Masquerade.
+iptables -A POSTROUTING -t nat -o $IF_PUBLIC -j MASQUERADE
+
+# Deny any packet coming in on the public internet interface eth0
+# which has a spoofed source address from our local networks:
+iptables -A INPUT -i $IF_PUBLIC -s $SN_PRIVATE -j DROP
+iptables -A INPUT -i $IF_PUBLIC -s 127.0.0.0/8 -j DROP
+
+# Don't forward from the outside to the inside.
+#iptables -A FORWARD -i $IF_PUBLIC -o $IF_PRIVATE -j REJECT
+
+# Don't forward from the outside to the outside.
+iptables -A FORWARD -i $IF_PUBLIC -o $IF_PUBLIC -j REJECT
+
+# Enable routing.
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Prevent SYN floods from consuming memory resources:
+echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+
+exit 0

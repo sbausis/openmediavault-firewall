@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "#    SPOOF    #"
+
+# deny connections over public interface which have local addresses
+#iptables -A INPUT -i $IF_PUBLIC -s $SN_PRIVATE -j DROP
+#iptables -A INPUT -i $IF_PUBLIC -s 127.0.0.0/8 -j DROP
+
+exit 0

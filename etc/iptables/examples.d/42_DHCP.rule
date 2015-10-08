@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "#     DHCP    #"
+
+# Allow DHCP traffic
+### OUTGOING
+#iptables -A OUTPUT -p udp -o $IF_PRIVATE --dport 68 -j ACCEPT
+#### INCOMING
+#iptables -A INPUT -p udp -i $IF_PRIVATE --sport 67 -j ACCEPT
+
+#iptables -I INPUT -i $IF_PRIVATE -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+#
+#iptables -A INPUT -i $IF_PRIVATE -p udp --sport 67 --dport 68 -j ACCEPT
+#iptables -A INPUT -p udp --dport 67 -j ACCEPT
+
+#iptables -A INPUT -i $IF_PRIVATE -p tcp --sport 68 --dport 67 -j ACCEPT
+#iptables -A INPUT -i $IF_PRIVATE -p udp --sport 68 --dport 67 -j ACCEPT
+
+exit 0
