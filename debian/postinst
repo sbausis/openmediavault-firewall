@@ -37,6 +37,22 @@ case "$1" in
 			omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
         fi
 
+        if ! omv_config_exists "${SERVICE_XPATH}/public-if"; then
+			omv_config_add_element "${SERVICE_XPATH}" "public-if" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/public-addr"; then
+			omv_config_add_element "${SERVICE_XPATH}" "public-addr" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/private-if"; then
+			omv_config_add_element "${SERVICE_XPATH}" "private-if" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/private-addr"; then
+			omv_config_add_element "${SERVICE_XPATH}" "private-addr" ""
+        fi
+
         omv-mkconf firewall 2>/dev/null
 
         dpkg-trigger update-fixperms
