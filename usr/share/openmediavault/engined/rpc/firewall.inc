@@ -40,6 +40,7 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
     public function initialize() {
         $this->registerMethod("getSettings");
         $this->registerMethod("setSettings");
+        $this->registerMethod("getNetworks");
 		// add more Functions to your RPC-Service
     }
 
@@ -115,6 +116,36 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
 
         // Return the configuration object.
         return $object;
+    }
+
+    /**
+     * Get a list of static networks for this machine.
+     *
+     * @return array networks
+     */
+    public function getNetworks($params, $context) {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array( "role" => OMV_ROLE_ADMINISTRATOR ));
+
+        $nets = array();
+        $ints = $xmlConfig->getList("//system/network/interfaces/interface");
+
+        foreach ($ints as $i) {
+            if (! ($i['netmask'] && $i['address']))
+                continue;
+
+            $netid = "{$i['devicename']} " . long2ip(ip2long($i['address']) & ip2long($i['netmask'])) . " / {$i['netmask']}";
+            $nets[$netid] = $netid;
+        }
+
+        $networks = array();
+        foreach ($nets as $n) {
+            $networks[] = array('netif'=> $n);
+        }
+
+        return $networks;
     }
 
 }

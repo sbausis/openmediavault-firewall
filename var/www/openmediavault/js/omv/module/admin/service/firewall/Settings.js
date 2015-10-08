@@ -28,19 +28,18 @@
 Ext.define("OMV.module.admin.service.firewall.Settings", {
     extend : "OMV.workspace.form.Panel",
 
-    /*plugins : [{
+    plugins : [{
         ptype        : "linkedfields",
         correlations : [{
             name       : [
-                "gateway"
+                "settings"
             ],
             conditions : [{
                 name  : "dhcp-enable",
                 value : false
-            }],
-            properties : "allowBlank"
+            }]
         }]
-    }],*/
+    }],
 
     initComponent : function () {
         var me = this;
@@ -78,7 +77,83 @@ Ext.define("OMV.module.admin.service.firewall.Settings", {
                 name       : "enable",
                 fieldLabel : _("Enable"),
                 checked    : false
-            }]
+            },
+			{
+	            xtype    : "fieldset",
+				name     : "settings",
+	            title    : _("Settings"),
+	            defaults : {
+	                labelSeparator : ""
+	            },
+	            items    : [
+					{
+		                xtype         : "combo",
+		                name          : "public-if",
+		                hiddenName    : "public-if",
+		                fieldLabel    : _("Public Network"),
+		                emptyText     : _("Select a network ..."),
+		                allowBlank    : false,
+		                editable      : true,
+		                triggerAction : "all",
+		                displayField  : "netif",
+		                valueField    : "netif",
+		                store         : Ext.create("OMV.data.Store", {
+		                    autoLoad : true,
+		                    model    : OMV.data.Model.createImplicit({
+		                        idProperty  : "netif",
+		                        fields      : [
+		                            { name : "netif", type : "string" }
+		                        ]
+		                    }),
+		                    proxy : {
+		                        type : "rpc",
+		                        rpcData : {
+		                            service : "Firewall",
+		                            method  : "getNetworks"
+		                        },
+		                        appendSortParams : false
+		                    },
+		                    sorters : [{
+		                        direction : "ASC",
+		                        property  : "netif"
+		                    }]
+		                })
+		            },
+					{
+		                xtype         : "combo",
+		                name          : "private-if",
+		                hiddenName    : "private-if",
+		                fieldLabel    : _("Private Network"),
+		                emptyText     : _("Select a network ..."),
+		                allowBlank    : false,
+		                editable      : true,
+		                triggerAction : "all",
+		                displayField  : "netif",
+		                valueField    : "netif",
+		                store         : Ext.create("OMV.data.Store", {
+		                    autoLoad : true,
+		                    model    : OMV.data.Model.createImplicit({
+		                        idProperty  : "netif",
+		                        fields      : [
+		                            { name : "netif", type : "string" }
+		                        ]
+		                    }),
+		                    proxy : {
+		                        type : "rpc",
+		                        rpcData : {
+		                            service : "Firewall",
+		                            method  : "getNetworks"
+		                        },
+		                        appendSortParams : false
+		                    },
+		                    sorters : [{
+		                        direction : "ASC",
+		                        property  : "netif"
+		                    }]
+		                })
+		            }
+				]
+			}]
         }];
     }
 });
