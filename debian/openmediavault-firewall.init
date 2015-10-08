@@ -1,0 +1,58 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          openmediavault-firewall
+# Required-Start:    $syslog $local_fs
+# Required-Stop:     $syslog $local_fs
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: The openmediavault-firewall.
+# Description:       The openmediavault-firewall.
+### END INIT INFO
+
+. /etc/default/locale
+
+set -e
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+[ -f /etc/iptables/firewall ] || exit 0
+
+. /etc/iptables/firewall
+
+_stop(){
+	echo "Stopping iptables..."
+	for file in `ls /etc/iptables/rules.d/00_*.rule`; do
+	        if [ -f "$file" ]; then /bin/bash "$file"; fi
+	done
+}
+
+_start(){
+	echo "Starting iptables..."
+	for file in `ls /etc/iptables/rules.d/*.rule`; do
+	        if [ -f "$file" ]; then /bin/bash "$file"; fi
+	done
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        _start
+        ;;
+  stop)
+        _stop
+        ;;
+  restart)
+        _stop
+        _start
+        ;;
+  *)
+        echo $"Usage: $PROG {start|stop|restart}"
+        exit 1
+esac
+
+echo "##   DONE    ##"
+
+exit 0
