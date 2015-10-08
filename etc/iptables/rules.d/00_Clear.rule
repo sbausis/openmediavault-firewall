@@ -2,9 +2,6 @@
 
 echo "#    CLEAR    #"
 
-# Disable routing.
-echo 1 > /proc/sys/net/ipv4/ip_forward
-
 # dearming iptables.. !! you are unsecure !!
 iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT

@@ -18,9 +18,9 @@ set -e
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-[ -f /etc/iptables/firewall ] || exit 0
+[ -f /etc/iptables/interfaces ] || exit 0
 
-. /etc/iptables/firewall
+. /etc/iptables/interfaces
 
 _stop(){
 	echo "Stopping iptables..."
