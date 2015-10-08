@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "#    INIT     #"
+
+# Always accept loopback traffic
+iptables -A INPUT -i $IF_PRIVATE -s 0/0 -d 0/0 -j ACCEPT
+iptables -A INPUT -i lo -s 0/0 -d 0/0 -j ACCEPT
+
+exit 0

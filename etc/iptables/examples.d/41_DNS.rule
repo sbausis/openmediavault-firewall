@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "#     DNS     #"
+
+# Allow DNS traffic
+### OUTGOING
+#iptables -A OUTPUT -p udp -o eth0 --dport 53 -j ACCEPT
+#iptables -A OUTPUT -p udp -o eth1 --dport 53 -j ACCEPT
+### INCOMING
+#iptables -A INPUT -p udp -i eth0 --sport 53 -j ACCEPT
+#iptables -A INPUT -p udp -i eth1 --sport 53 -j ACCEPT
+
+# Allow DNS traffic
+#iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+#iptables -A INPUT -p udp --sport 53 -j ACCEPT
+
+#iptables -A INPUT -p udp --source-port 53 -d 0/0 -j ACCEPT
+#iptables -A INPUT -p udp --source-port 53 -d 0/0 --destination-port 1024:65535 -j ACCEPT
+
+exit 0

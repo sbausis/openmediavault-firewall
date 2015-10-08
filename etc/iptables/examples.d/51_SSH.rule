@@ -1,0 +1,39 @@
+#!/bin/bash
+
+echo "#     SSH     #"
+
+## INCOMING
+# allow SSH on Port 22 at Interface eth0
+#iptables -A INPUT -i $IF_PRIVATE -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+#iptables -A OUTPUT -o $IF_PRIVATE -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+## or allow only from Range
+##iptables -A INPUT -i $IF_PRIVATE -p tcp -s $SN_PRIVATE --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+##iptables -A OUTPUT -o $IF_PRIVATE -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+#
+### OUTGOING
+## allow SSH on Port 22 at Interface eth0
+#iptables -A OUTPUT -o $IF_PRIVATE -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+#iptables -A INPUT -i $IF_PRIVATE -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+## or allow only to Range
+##iptables -A OUTPUT -o $IF_PRIVATE -p tcp -d $SN_PRIVATE --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+##iptables -A INPUT -i $IF_PRIVATE -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+#
+### INCOMING
+## allow SSH on Port 22 at Interface eth1
+#iptables -A INPUT -i $IF_PUBLIC -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+#iptables -A OUTPUT -o $IF_PUBLIC -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+#
+### OUTGOING
+## allow SSH on Port 22 at Interface eth1
+#iptables -A OUTPUT -o $IF_PUBLIC -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+#iptables -A INPUT -i $IF_PUBLIC -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+
+
+#iptables -A INPUT -p tcp -s 0/0 -d 0/0 --destination-port 22 --syn -j ACCEPT
+#iptables -A INPUT -p udp -s 0/0 -d 0/0 --destination-port 5353 -j ACCEPT
+#iptables -A INPUT -p udp -s 0/0 -d 0/0 --destination-port 1900 -j ACCEPT
+#iptables -A INPUT -p udp --sport 5353 --dport 1024:65535 -j ACCEPT
+#iptables -A INPUT -p udp --sport 1900 --dport 1024:65535 -j ACCEPT
+
+
+exit 0

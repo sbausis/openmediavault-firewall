@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo "#     HTTP    #"
+
+## INCOMING
+# allow HTTP on Port 80 at Interface eth0
+#iptables -A INPUT -i $IF_PRIVATE -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+#iptables -A OUTPUT -o $IF_PRIVATE -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+#
+## allow HTTPS on Port 443 at Interface X
+##iptables -A INPUT -i $IF_PRIVATE -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
+##iptables -A OUTPUT -o $IF_PRIVATE -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+#
+## OR combine these three above (since all are TCP connections at Interface X)
+##iptables -A INPUT -i $IF_PRIVATE -p tcp -m multiport --dports 22,80,443 -m state --state NEW,ESTABLISHED -j ACCEPT
+##iptables -A OUTPUT -o $IF_PRIVATE -p tcp -m multiport --sports 22,80,443 -m state --state ESTABLISHED -j ACCEPT
+#
+#
+### OUTGOING
+## allow HTTP on Port 80 at Interface eth0
+#iptables -A OUTPUT -o $IF_PRIVATE -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+#iptables -A INPUT -i $IF_PRIVATE -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT
+#
+## allow HTTPS on Port 443 at Interface X
+##iptables -A OUTPUT -o $IF_PRIVATE -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
+##iptables -A INPUT -i $IF_PRIVATE -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT
+
+#iptables -A INPUT -p tcp -s 0/0 -d 0/0 --destination-port 8000 --syn -j ACCEPT
+
+exit 0

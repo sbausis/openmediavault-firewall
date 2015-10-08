@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "#    DROP     #"
+
+# Finally, DENY all connection requests to any UDP port not yet provided
+# for and all SYN connection requests to any TCP port not yet provided
+# for.
+iptables -A INPUT -s 0/0 -d 0/0 -p udp -j DROP
+iptables -A INPUT -s 0/0 -d 0/0 -p tcp --syn -j DROP
+
+exit 0

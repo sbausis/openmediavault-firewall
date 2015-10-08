@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "#  DEFAULTS   #"
+
+# dearming iptables.. !! you are unsecure !!
+#iptables -P INPUT ACCEPT
+#iptables -P OUTPUT ACCEPT
+#iptables -P FORWARD ACCEPT
+
+# arming iptables.. you completely shut off
+#iptables -P INPUT DROP
+#iptables -P FORWARD DROP
+#iptables -P OUTPUT DROP
+
+# arming iptables.. you are protected
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT ACCEPT
+
+exit 0

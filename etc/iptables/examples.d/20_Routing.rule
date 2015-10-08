@@ -1,0 +1,25 @@
+#!/bin/bash
+
+echo "#   ROUTING   #"
+
+# Forward all packets from eth1 (internal network) to eth0 (the internet).
+iptables -A FORWARD -i $IF_PRIVATE -o $IF_PUBLIC -j ACCEPT
+
+# Forward packets that are part of existing and related connections from eth0 to eth1.
+iptables -A FORWARD -i $IF_PUBLIC -o $IF_PRIVATE -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Permit packets in to firewall itself that are part of existing and related connections.
+iptables -A INPUT -i $IF_PUBLIC -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+
+#iptables -A INPUT -i $IF_PRIVATE -s "192.168.1.117" -d "192.168.1.1" -p icmp --icmp-type echo-request -j ACCEPT
+#iptables -A INPUT -i $IF_PRIVATE -s "192.168.1.117" -d "192.168.1.1" -p icmp --icmp-type echo-reply -j ACCEPT
+##iptables -A INPUT -i $IF_PRIVATE -s "192.168.1.118" -d "192.168.1.1" -j ACCEPT
+#iptables -A INPUT -i $IF_PRIVATE -s "192.168.1.117" -j DROP
+#iptables -A FORWARD -i $IF_PRIVATE -s "192.168.1.117" -j DROP
+
+iptables -A FORWARD -i $IF_PRIVATE -o $IF_PRIVATE -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+
+
+exit 0

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "#    PINGS    #"
+
+## INCOMING
+# allow PING from Outside
+#iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+#iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+#
+### OUTGOING
+## allow PING from Inside
+#iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+#iptables -A INPUT -p icmp --icmp-type echo-reply -j ACCEPT
+
+#iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+#iptables -A INPUT -p icmp --icmp-type echo-reply -j ACCEPT
+
+#iptables -A INPUT -i $IF_PUBLIC -s $SN_PRIVATE -j DROP
+
+#iptables -A FORWARD -s $SN_PRIVATE -d $SN_PRIVATE -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+
+exit 0

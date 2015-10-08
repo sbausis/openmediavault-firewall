@@ -22,11 +22,10 @@ require_once("openmediavault/module.inc");
 require_once("openmediavault/config.inc");
 require_once("openmediavault/error.inc");
 require_once("openmediavault/util.inc");
-#require_once("openmediavault/initscript.inc");
-#require_once("openmediavault/log.inc");
+require_once("openmediavault/initscript.inc");
 
 class OMVModuleFirewall extends OMVModuleServiceAbstract
-    implements OMVINotifyListener {
+    implements OMVINotifyListener, OMVIModuleServiceStatus {
 
     /**
      * Get the module name.
@@ -36,12 +35,59 @@ class OMVModuleFirewall extends OMVModuleServiceAbstract
     }
 
     public function applyConfig() {
+        $cmd = "export LANG=C; omv-mkconf firewall 2>&1";
+		if (0 !== $this->exec($cmd, $output)) {
+			throw new OMVException(OMVErrorMsg::E_EXEC_FAILED,
+			  $cmd, implode("\n", $output));
+		}
+    }
+
+	/**
+	 * Stop the managed service.
+	 */
+	public function stopService() {
+		$initd = new OMVSysVInitScript("openmediavault-firewall", FALSE);
+		$initd->exec();
+	}
+
+	/**
+	 * Start the managed service.
+	 * @throw E_CONFIG_GET_OBJECT_FAILED
+	 */
+	public function startService() {
+		global $xmlConfig;
+		$xpath = "//services/firewall";
+		$object = $xmlConfig->get($xpath);
+		if (is_null($object)) {
+			throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+			  $xpath);
+		}
+		if (FALSE === boolvalEx($object['enable']))
+			return;
+		$initd = new OMVSysVInitScript("openmediavault-firewall", TRUE);
+		$initd->exec();
+	}
+
+    /**
+     * Get the module status.
+     */
+    public function getStatus() {
         global $xmlConfig;
 
-        $cmd = "omv-mkconf firewall 2>&1";
-        if(0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
+        // Get the configuration object
+        $xpath  = "//services/firewall";
+        $object = $xmlConfig->get($xpath);
+        if (is_null($object))
+            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
 
+        $initd = new OMVSysVInitScript("openmediavault-firewall");
+
+        return array(
+            "name"    => $this->getName(),
+            "title"   => gettext("firewall"),
+            "enabled" => ! empty($object['enable']),
+            "running" => ($initd->status() == 0)
+        );
     }
 
     /**

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "#  PROTECTION #"
+
+# protect from DoS
+iptables -A INPUT -p tcp --dport 22 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
+iptables -A INPUT -p tcp --dport 8000 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
+
+exit 0

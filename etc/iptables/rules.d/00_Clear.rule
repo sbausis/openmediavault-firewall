@@ -1,0 +1,43 @@
+#!/bin/bash
+
+echo "#    CLEAR    #"
+
+# Disable routing.
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# dearming iptables.. !! you are unsecure !!
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+
+# arming iptables.. you completely shut off
+#iptables -P INPUT DROP
+#iptables -P FORWARD DROP
+#iptables -P OUTPUT DROP
+
+# arming iptables.. you are protected
+#iptables -P INPUT DROP
+#iptables -P FORWARD DROP
+#iptables -P OUTPUT ACCEPT
+
+# clear standart Tables
+iptables -F
+iptables -X
+# Zero out Packet Counter
+iptables -Z
+
+# clear all custom Tables
+for table in $(</proc/net/ip_tables_names); do
+        iptables -t $table -F
+        iptables -t $table -X
+		# Zero out Packet Counter
+        iptables -t $table -Z
+done
+
+# Enable routing.
+echo 0 > /proc/sys/net/ipv4/ip_forward
+
+# Prevent SYN floods from consuming memory resources:
+echo 0 > /proc/sys/net/ipv4/tcp_syncookies
+
+exit 0
