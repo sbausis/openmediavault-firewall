@@ -1,4 +1,10 @@
-openmediavault-firewall (0.1.0) unstable; urgency=low
+openmediavault-firewall (0.1.2) unstable; urgency=low
+
+  * select Network
+
+ -- Simon Baur <sbausis@gmx.net>  Mon, 04 Jan 2016 02:17:23 +0100
+
+openmediavault-firewall (0.1.1) unstable; urgency=low
 
   * Initial Release.
 

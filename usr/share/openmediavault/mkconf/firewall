@@ -35,8 +35,10 @@ fi
 Interfaces_File() {
 	OMV_PUBLIC_IF=$(omv_config_get "//services/firewall/public-if")
 	OMV_PUBLIC_ADDR=$(omv_config_get "//services/firewall/public-addr")
+	[ -z "${OMV_PUBLIC_ADDR}" ] && OMV_PUBLIC_ADDR=$(ifconfig -a ${OMV_PUBLIC_IF} | grep 'inet addr' | sed 's/.*addr:\([0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+\)[ ]\+.*/\1/')
 	OMV_PRIVATE_IF=$(omv_config_get "//services/firewall/private-if")
 	OMV_PRIVATE_ADDR=$(omv_config_get "//services/firewall/private-addr")
+	[ -z "${OMV_PRIVATE_ADDR}" ] && OMV_PRIVATE_ADDR=$(ifconfig -a ${OMV_PRIVATE_IF} | grep 'inet addr' | sed 's/.*addr:\([0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+\)[ ]\+.*/\1/')
 	cat <<EOF > ${OMV_INTERFACES_FILE}
 #!/bin/bash
 

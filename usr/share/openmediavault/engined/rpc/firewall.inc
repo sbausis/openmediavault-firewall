@@ -90,7 +90,9 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
         $this->validateMethodParams($params, '{
             "type"       : "object",
             "properties" : {
-                "enable"             : { "type" : "boolean" }
+                "enable"             : { "type" : "boolean" },
+	            "public-if"          : { "type" : "string" },
+	            "private-if"         : { "type" : "string" }
             }
         }');
 
@@ -100,11 +102,16 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
         if(is_null($oldObject))
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
 
+		$pub = explode(" ", $params['public-if']);
+		$priv = explode(" ", $params['private-if']);
+		
         // Update the configuration object.
         $object = array(
             "enable" 	=> array_boolval($params, 'enable'),
-			// readd OldStuff
-            //"entries" 	=> isset($oldObject['entries']) ? $oldObject['entries'] : array()
+			"public-if" => $pub[0],
+			"public-addr" => $pub[1],
+			"private-if" => $priv[0],
+			"private-addr" => $priv[1]
         );
 
         if(FALSE === $xmlConfig->replace("//services/firewall", $object))
@@ -127,27 +134,28 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array( "role" => OMV_ROLE_ADMINISTRATOR ));
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
 
-        $nets = array();
-        $ints = $xmlConfig->getList("//system/network/interfaces/interface");
+        $objects = array();
 
-        foreach ($ints as $i) {
-            if (! ($i['netmask'] && $i['address']))
+        $cmd = "ifconfig -a | grep 'Link encap' | sed 's/[ ]\+.*//'";
+        OMVUtil::exec($cmd, $result);
+
+        foreach ($result as $interface)
+        {
+            if (empty($interface))
                 continue;
 
-            $netid = "{$i['devicename']} " . long2ip(ip2long($i['address']) & ip2long($i['netmask'])) . " / {$i['netmask']}";
-            $nets[$netid] = $netid;
+            $objects[] = array(
+                "netif" => trim($interface)
+            );
         }
 
-        $networks = array();
-        foreach ($nets as $n) {
-            $networks[] = array('netif'=> $n);
-        }
-
-        return $networks;
+        return $objects;
     }
-
 }
 
 // Register the RPC service.
