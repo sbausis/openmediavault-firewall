@@ -134,27 +134,28 @@ class OMVRpcServiceFirewall extends OMVRpcServiceAbstract {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array( "role" => OMV_ROLE_ADMINISTRATOR ));
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
 
-        $nets = array();
-        $ints = $xmlConfig->getList("//system/network/interfaces/interface");
+        $objects = array();
 
-        foreach ($ints as $i) {
-            if (! ($i['netmask'] && $i['address']))
+        $cmd = "ifconfig -a | grep 'Link encap' | sed 's/[ ]\+.*//'";
+        OMVUtil::exec($cmd, $result);
+
+        foreach ($result as $interface)
+        {
+            if (empty($interface))
                 continue;
 
-            $netid = "{$i['devicename']} " . long2ip(ip2long($i['address']) & ip2long($i['netmask'])) . "/{$i['netmask']}";
-            $nets[$netid] = $netid;
+            $objects[] = array(
+                "netif" => trim($interface)
+            );
         }
 
-        $networks = array();
-        foreach ($nets as $n) {
-            $networks[] = array('netif'=> $n);
-        }
-
-        return $networks;
+        return $objects;
     }
-
 }
 
 // Register the RPC service.
